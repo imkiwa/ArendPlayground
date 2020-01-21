@@ -2,41 +2,102 @@
 
 \func f1 (x y : Nat) => x
 \func f2 : Nat => 0
-\func f3 (f : Nat -> Nat) (z : Nat) : Int => 0
+\func f3 (f : Nat -> Nat) (z : Nat) : Nat => 0
 \func f4 : Nat => 0
 \func f5 => f1
 \func f6 => f4
 
-\func test => f1 f2 f3 f4 f5 f6
+-- Actually I didn't get what is `priorities`???
+\func test => f1 f2 (f3 (f5 f6) f4)
 
 -- 2. Define in Arend the function 'if', which takes a boolean value b and two elements of an arbitrary type A
 --    and return the first element when b equals to true and the second one otherwise.
 
 \data Bool | true | false
 
+\func if {T : \Type} (b : Bool) (t f : T) : T \elim b
+  | true => t
+  | false => f
+
 -- 3. Define || via 'if'.
 
-\func \infixr 2 || (x y : Bool) : Bool => {?}
+\func \infixr 2 || (x y : Bool) : Bool => if x true y
 
 -- 4. Define the power and the factorial functions for natural numbers.
+\func \infixl 6 + (x y : Nat) : Nat \elim y
+  | 0 => x
+  | suc y => suc (x + y)
 
-\func \infixr 8 ^ (x y : Nat) => {?}
+\func \infixl 7 * (x y : Nat) : Nat \elim y
+  | 0 => 0
+  | suc y => x * y + x
 
-\func fac (x : Nat) => {?}
+\func \infixr 8 ^ (x y : Nat) : Nat \elim y
+  | 0 => 1
+  | suc y' => x ^ y' * x
+
+\func fac (x : Nat) : Nat \elim x
+  | 0 => 1
+  | suc x' => (suc x') * fac x'
 
 -- 5. Define mod and gcd.
 
-\func mod (x y : Nat) => {?}
+\func \infix 4 < (n m : Nat) : Bool \with
+  | 0, 0 => false
+  | 0, _ => true
+  | _, 0 => false
+  | suc n, suc m => n < m
 
-\func gcd (x y : Nat) => {?}
+\func \infix 4 == (n m : Nat) : Bool \with
+  | 0, 0 => true
+  | 0, _ => false
+  | _, 0 => false
+  | suc n, suc m => n == m
+
+\func \infixl 6 - (x y : Nat) : Nat
+  | 0, _ => 0
+  | suc x, 0 => suc x
+  | suc x, suc y => x - y
+
+\func div (x y : Nat) : Nat => div' x x y
+  \where
+    \func div' (s x y : Nat) : Nat \elim s
+      | 0 => 0
+      | suc s => if (x < y) 0 (suc (div' s (x - y) y))
+
+\func mod (x y : Nat) : Nat => x - (x `div` y) * y
+
+\func gcd (x y : Nat) : Nat => gcd' x x y
+  \where
+    \func gcd' (s x y : Nat) : Nat \elim s
+      | 0 => y
+      | suc s => if (y == 0) x (gcd' s y (x `mod` y))
 
 -- 6. Define the map function.
 
-\data List (A : \Type) | nil | \infixr 5 :: A (List A)
+\data List (T : \Type) | [] | \infixr 5 :: T (List T)
 
-\func map {A B : \Type} (f : A -> B) (xs : List A) : List B => {?}
+\func map {T U : \Type} (f : T -> U) (xs : List T) : List U \elim xs
+  | [] => []
+  | :: x xs => f x :: map f xs
 
 -- 7. Define the transpose function.
 --    It takes a list of lists considered as a matrix and returns a list of lists which represents the transposed matrix.
 --    Example:
 --    transpose ((1 :: 2 :: 3 :: nil) :: (4 :: 5 :: 6 :: nil)) == ((1 :: 4 :: nil) :: (2 :: 5 :: nil) :: (3 :: 6 :: nil))
+
+\func fuck {T : \Type} : T => {?}
+
+\func head {T : \Type} (xs : List T) : T \with
+  | [] => fuck
+  | :: x _ => x
+
+\func tail {T : \Type} (xs : List T) : List T \with
+  | [] => fuck
+  | :: _ xs => xs
+
+\func transpose {T : \Type} (m : List (List T)) : List (List T) \with
+  | [] => []
+  | :: [] rs => transpose rs
+  | :: (:: x xs) xss => (x :: map head xss) :: transpose (xs :: (map tail xss))
+
