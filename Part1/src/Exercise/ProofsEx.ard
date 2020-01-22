@@ -56,7 +56,7 @@
 -- ??????????????????? is that right?
 \func t10 (P Q : Nat -> \Type) (h : \Pi (x : Nat) -> (P x -> Q x))
   : (\Sigma (x : Nat) (P x)) -> (\Sigma (x : Nat) (Q x))
-  => {?}
+  => 🔨
 
 -- 11. Formulate and prove the following proposition:
 --     t11 : If, for every x : Nat, either P x is false or Q x is false, then P 3 implies that Q 3 is false.
@@ -64,7 +64,7 @@
 -- ??????????????????? is that right?
 \func t11 (P Q : Nat -> \Type) (h : \Pi (x : Nat) -> (Not (P x) || Not (Q x)))
   : (P 3 -> Not (Q 3))
-  => {?}
+  => 🔨
 
 -- 12. Prove associativity of `and` and `or`.
 
@@ -78,9 +78,9 @@
   | _, true => true
   | false, false => false
 
-\func and-assoc (x y z : Bool) : (x and y) and z = x and (y and z) => {?}
+\func and-assoc (x y z : Bool) : (x and y) and z = x and (y and z) => 🔨
 
-\func or-assoc (x y z : Bool) : (x or y) or z = x or (y or z) => {?}
+\func or-assoc (x y z : Bool) : (x or y) or z = x or (y or z) => 🔨
 
 -- 13. Prove that 2 * 2 equals to 4.
 
@@ -92,4 +92,4 @@
   | nil => ys
   | cons x xs => cons x (xs ++ ys)
 
-\func ++-assoc {A : \Type} (xs ys zs : List A) : (xs ++ ys) ++ zs = xs ++ (ys ++ zs) => {?}
+\func ++-assoc {A : \Type} (xs ys zs : List A) : (xs ++ ys) ++ zs = xs ++ (ys ++ zs) => 🔨
