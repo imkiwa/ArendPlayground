@@ -86,7 +86,7 @@
 --    Example:
 --    transpose ((1 :: 2 :: 3 :: nil) :: (4 :: 5 :: 6 :: nil)) == ((1 :: 4 :: nil) :: (2 :: 5 :: nil) :: (3 :: 6 :: nil))
 
-\func fuck {T : \Type} : T => {?}
+\func fuck {T : \Type} : T => 🔨
 
 \func head {T : \Type} (xs : List T) : T \with
   | [] => fuck

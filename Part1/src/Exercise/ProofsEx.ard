@@ -3,23 +3,32 @@
 
 -- 1. Prove that (P -> Q -> R) -> (P -> Q) -> P -> S
 
-\func t1 {P Q R : \Type} (r : P -> Q -> R) (q : P -> Q) (p : P) : R => {?}
+\func t1 {P Q R : \Type} (r : P -> Q -> R) (q : P -> Q) (p : P) : R
+  => r p (q p)
 
 -- 2. Prove that ((P -> Q -> R) -> P) -> (P -> R) -> R
 
-\func t2 {P Q R : \Type} (p : (P -> Q -> R) -> P) (r : P -> R) : R => {?}
+\func t2 {P Q R : \Type} (p : (P -> Q -> R) -> P) (r : P -> R) : R
+  => r (p (\lam p' _ => r p'))
 
 -- 3. Prove that (P && Q -> R) -> P -> Q -> R
 
-\func t3 {P Q R : \Type} (f : \Sigma P Q -> R) (p : P) (q : Q) : R => {?}
+\func t3 {P Q R : \Type} (f : \Sigma P Q -> R) (p : P) (q : Q) : R
+  => f (p, q)
 
 -- 4. Formulate and prove t5 : (P -> Q -> R) -> P && Q -> R
+\func t5 {P Q R : \Type} (f : P -> Q -> R) (pq : \Sigma P Q) : R
+  => f pq.1 pq.2
 
 -- 5. Prove that (P -> R) -> (Q -> R) -> P || Q -> R
 
-\func t4 {P Q R : \Type} (f : P -> R) (g : Q -> R) (h : P || Q) : R => {?}
+\func t4 {P Q R : \Type} (f : P -> R) (g : Q -> R) (h : P || Q) : R \elim h
+  | inl p => f p
+  | inr q => g q
 
 -- 6. Formulate and prove t6 : (P || Q -> P && Q) -> (P -> Q) && (Q -> P)
+\func t6 {P Q : \Type} (f : P || Q -> P && Q) : (P -> Q) && (Q -> P)
+  => 🔨
 
 -- 7. Russell's paradox shows that there is no set of all sets. If such a set exists, then we can form the set `B` of sets which are not members of themselves.
 --    Then `B` belongs to itself if and only if it is not.
@@ -28,21 +37,34 @@
 --    Its proof also constructs a proposition which is true if and only if it is false.
 --    Prove that more generally the existence of any such proposition implies a contradiction.
 
-\func t7 {P : \Type} (f : P -> Not P) (g : Not P -> P) : Empty => {?}
+\func t7 {P : \Type} (f : P -> Not P) (g : Not P -> P) : Empty
+  => 🔨
 
 -- 8. Prove that if, for every x : Nat, P x is true, then there exists x : Nat such that P x is true.
 
-\func t8 (P : Nat -> \Type) (h : \Pi (x : Nat) -> P x) : \Sigma (x : Nat) (P x) => {?}
+\func t8 (P : Nat -> \Type) (h : \Pi (x : Nat) -> P x) : \Sigma (x : Nat) (P x)
+  => (0, h 0)
 
 -- 9. Prove that if there is no x : Nat such that P x holds, then P 3 is false.
 
-\func t9 (P : Nat -> \Type) (h : Not (\Sigma (x : Nat) (P x))) : Not (P 3) => {?}
+\func t9 (P : Nat -> \Type) (h : Not (\Sigma (x : Nat) (P x))) : Not (P 3)
+  => 🔨
 
 -- 10. Formulate and prove the following proposition:
 --     t10 : If, for every x : Nat, P x implies Q x, then the existence of an element x : Nat for which P x is true implies the existence of an element x : Nat for which Q x is true.
 
+-- ??????????????????? is that right?
+\func t10 (P Q : Nat -> \Type) (h : \Pi (x : Nat) -> (P x -> Q x))
+  : (\Sigma (x : Nat) (P x)) -> (\Sigma (x : Nat) (Q x))
+  => {?}
+
 -- 11. Formulate and prove the following proposition:
 --     t11 : If, for every x : Nat, either P x is false or Q x is false, then P 3 implies that Q 3 is false.
+
+-- ??????????????????? is that right?
+\func t11 (P Q : Nat -> \Type) (h : \Pi (x : Nat) -> (Not (P x) || Not (Q x)))
+  : (P 3 -> Not (Q 3))
+  => {?}
 
 -- 12. Prove associativity of `and` and `or`.
 
